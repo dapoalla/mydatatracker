@@ -1,16 +1,48 @@
 <?php
 // --- Database Configuration ---
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'cyberros_aiuser');
-define('DB_PASSWORD', 'Admin4gpt*');
-define('DB_NAME', 'cyberros_Vehicletrack');
+// Prefer environment variables; fall back to production defaults.
+// For local XAMPP, we auto-switch to user 'root' with empty password.
+// Change DB_NAME if your local database differs.
+
+$current_page = basename($_SERVER['PHP_SELF'] ?? '');
+// If not installed yet, redirect all pages (except setup.php) to setup
+if (!file_exists(__DIR__ . '/install.lock') && $current_page !== 'setup.php') {
+    header('Location: setup.php');
+    exit;
+}
+
+$envDbServer   = getenv('DB_SERVER') ?: 'localhost';
+$envDbUser     = getenv('DB_USERNAME') ?: 'cyberros_aiuser';
+$envDbPassword = getenv('DB_PASSWORD') ?: 'Admin4gpt*';
+$envDbName     = getenv('DB_NAME') ?: 'cyberros_Vehicletrack';
+
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$isLocal = stripos(PHP_OS, 'WIN') !== false || preg_match('/localhost|127\.0\.0\.1/i', $host);
+if ($isLocal) {
+    // XAMPP typical defaults
+    $envDbUser = getenv('DB_USERNAME') ?: 'root';
+    $envDbPassword = getenv('DB_PASSWORD') ?: '';
+    // Keep DB name consistent unless overridden via env
+}
+
+// If setup has written local config, prefer it
+if (file_exists(__DIR__ . '/config.local.php')) {
+    require_once __DIR__ . '/config.local.php';
+} else {
+    define('DB_SERVER', $envDbServer);
+    define('DB_USERNAME', $envDbUser);
+    define('DB_PASSWORD', $envDbPassword);
+    define('DB_NAME', $envDbName);
+}
 
 // --- Establish Database Connection ---
-$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-
-// Check connection
-if($link === false){
-    die("ERROR: Could not connect to database. " . mysqli_connect_error());
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+try {
+    $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    mysqli_set_charset($link, 'utf8mb4');
+} catch (mysqli_sql_exception $e) {
+    error_log('Database connection failed: ' . $e->getMessage());
+    die('Database connection error. Please check configuration.');
 }
 
 // --- Session and Authentication Management ---
@@ -114,6 +146,40 @@ function is_demo_account() {
  * @param int $user_id The ID of the user owning the vehicle.
  */
 function initialize_vehicle_items($db_link, $vehicle_id, $user_id) {
+    // Validate parent rows exist to avoid FK violations
+    try {
+        // Check vehicle exists for this user
+        $veh_sql = "SELECT id FROM vehicles WHERE id = ? AND user_id = ? LIMIT 1";
+        if ($stmt_v = mysqli_prepare($db_link, $veh_sql)) {
+            mysqli_stmt_bind_param($stmt_v, "ii", $vehicle_id, $user_id);
+            mysqli_stmt_execute($stmt_v);
+            mysqli_stmt_store_result($stmt_v);
+            if (mysqli_stmt_num_rows($stmt_v) === 0) {
+                mysqli_stmt_close($stmt_v);
+                error_log("initialize_vehicle_items: vehicle {$vehicle_id} for user {$user_id} not found; skipping defaults.");
+                return; // Parent vehicle missing; skip initialization
+            }
+            mysqli_stmt_close($stmt_v);
+        }
+
+        // Check user exists
+        $usr_sql = "SELECT id FROM users WHERE id = ? LIMIT 1";
+        if ($stmt_u = mysqli_prepare($db_link, $usr_sql)) {
+            mysqli_stmt_bind_param($stmt_u, "i", $user_id);
+            mysqli_stmt_execute($stmt_u);
+            mysqli_stmt_store_result($stmt_u);
+            if (mysqli_stmt_num_rows($stmt_u) === 0) {
+                mysqli_stmt_close($stmt_u);
+                error_log("initialize_vehicle_items: user {$user_id} not found; skipping defaults.");
+                return; // Parent user missing; skip initialization
+            }
+            mysqli_stmt_close($stmt_u);
+        }
+    } catch (Throwable $e) {
+        error_log('initialize_vehicle_items precheck error: ' . $e->getMessage());
+        // Continue; insertion will still fail if parents truly missing
+    }
+
     $item_types = [
         "Car Insurance" => "insurance",
         "Road Worthiness" => "roadworthiness",

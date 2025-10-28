@@ -298,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         if (!empty($purchase_date) && !empty($location) && $quantity > 0 && $cost >= 0 && $current_user_id) {
             $sql = "INSERT INTO cooking_gas_logs (user_id, purchase_date, location, quantity, cost, notes) VALUES (?, ?, ?, ?, ?, ?)";
             if ($stmt = mysqli_prepare($link, $sql)) {
-                mysqli_stmt_bind_param($stmt, "isssds", $current_user_id, $purchase_date, $location, $quantity, $cost, $notes);
+                mysqli_stmt_bind_param($stmt, "issdds", $current_user_id, $purchase_date, $location, $quantity, $cost, $notes);
                 if (mysqli_stmt_execute($stmt)) {
                     $message = "Cooking gas purchase logged successfully!";
                     $message_type = 'success';

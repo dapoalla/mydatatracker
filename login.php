@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        $sql = "SELECT id, username, password_hash FROM users WHERE username = ?";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
@@ -48,13 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if username exists, if yes then verify password
                 if (mysqli_stmt_num_rows($stmt) == 1) {
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $stored_password);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $stored_hash);
                     if (mysqli_stmt_fetch($stmt)) {
-                        // For simple security, we're comparing plain text password.
-                        // In a real application, you would use password_verify($password, $hashed_password)
-                        if ($password == $stored_password) { // IMPORTANT: In production, use password_verify($password, $hashed_password)
-                            // Password is correct, so start a new session
-                            session_start();
+                        // Verify hashed password
+                        if (password_verify($password, $stored_hash)) {
+                            // Password is correct; session already started in config.php
 
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
@@ -93,10 +91,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - My Data Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container" style="max-width: 400px; margin-top: 50px;">
+    <div class="container card" style="max-width: 400px; margin-top: 50px;">
         <h2 style="text-align: center; margin-bottom: 20px;">Login to My Data Tracker</h2>
         <?php
         if(isset($_SESSION['message'])){
@@ -125,5 +126,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Registration is now only accessible via direct URL by admin. -->
         </form>
     </div>
+    <script>
+      // Apply saved theme preference to login page
+      (function(){
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || saved === 'dark-mode') {
+          document.body.classList.add('dark-mode');
+        }
+      })();
+    </script>
 </body>
 </html>

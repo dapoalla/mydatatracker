@@ -1,5 +1,5 @@
 /* style.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 /* CSS Variables for theming */
 :root {
@@ -63,7 +63,7 @@ body.dark-mode {
 
 
 body {
-    font-family: 'Inter', Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: var(--bg-color);
@@ -271,10 +271,10 @@ form input[type="submit"]:active,
 }
 
 .button-primary {
-    background-color: #007bff;
+    background-color: #1976d2; /* Material UI primary */
 }
 .button-primary:hover {
-    background-color: #0056b3;
+    background-color: #1565c0;
 }
 
 .message {
@@ -480,4 +480,12 @@ input:checked + .slider:before {
 *:focus {
     outline: 2px solid #007bff; /* Highlight focused elements */
     outline-offset: 2px;
+}
+
+/* Card helper for compact panels (e.g., login panel) */
+.card {
+    background-color: var(--container-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }

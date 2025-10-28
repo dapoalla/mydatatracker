@@ -6,6 +6,11 @@ Thumbs.db
 
 # PHP / Logs
 error_log
+.cache/
+# Local installer artifacts
+config.local.php
+install.lock
+setup.log
 .phpunit.result.cache
 
 # Node / Build (if any)
