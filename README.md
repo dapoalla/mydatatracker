@@ -1,6 +1,19 @@
 # My Data Tracker
 
-My Data Tracker is a lightweight PHP/MySQL application for tracking vehicles, maintenance, mileage logs, electricity meter purchases, and related records.
+My Data Tracker is a personal information tracking app designed to help you stay on top of vehicle particulars and household utilities. It’s a lightweight PHP/MySQL application with a simple dashboard for logging, reviewing, and planning renewals.
+
+## Overview
+- Track vehicle documents: Road Worthiness, Vehicle Licence, Insurance, Driver’s Licence, and Ownership Certificate.
+- Log odometer readings and maintenance: mileage, service notes, dates, and costs.
+- Track other essentials: Electricity meter purchases/readings, Cooking gas purchases, refills, and usage.
+- Review reports to see recent activity and upcoming renewals at a glance.
+
+## Key Features
+- Vehicle particulars: store renewal dates and costs for key documents.
+- Odometer & maintenance: capture mileage logs and maintenance events for each vehicle.
+- Utilities tracking: record electricity meter history and cooking gas usage/purchases.
+- Multi-vehicle support: switch between vehicles and view their specific records.
+- Simple UI: dashboard-driven workflow with clear actions for logging and review.
 
 ## Requirements
 - PHP 8.1+ (tested locally on PHP 8.2)
