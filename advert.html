@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Data Tracker - Simplify Your Life, Track Everything That Matters</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light background */
+            color: #333;
+            line-height: 1.6;
+        }
+        /* Custom button styling for a more appealing look */
+        .btn-primary {
+            background-color: #4F46E5; /* Indigo 600 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+        }
+        .btn-primary:hover {
+            background-color: #4338CA; /* Indigo 700 */
+        }
+        .feature-icon {
+            color: #4F46E5; /* Indigo for icons */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-indigo-700 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2">My Data Tracker</h1>
+            <p class="text-xl md:text-2xl font-light">Simplify Your Life, Track Everything That Matters</p>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-16 md:py-24 text-center shadow-inner">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Take Control of Your Assets & Expenses</h2>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+                My Data Tracker is your all-in-one solution for managing vehicle details, maintenance, fuel, electricity, and cooking gas logs. Stay organized, save money, and never miss a beat!
+            </p>
+            <a href="#features" class="btn-primary inline-block text-lg md:text-xl hover:scale-105 transform transition-transform duration-300">
+                Discover Features <i class="fas fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 md:py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">Unique Features Designed for You</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Feature Card 1: Vehicle Management -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-car text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">Effortless Vehicle Management</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Add & organize multiple vehicles with detailed info.</li>
+                        <li>Track crucial vehicle documents (insurance, roadworthiness, driver's license).</li>
+                        <li>Receive timely reminders for upcoming renewals.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature Card 2: Comprehensive Logbook -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-book-open text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">Comprehensive Logbook & Cost Tracking</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Precise mileage logging for all your vehicles.</li>
+                        <li>Detailed maintenance tracking with costs.</li>
+                        <li>Monitor fuel consumption, volume, and expenses.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature Card 3: Smart Utility Management -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-lightbulb text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">Smart Utility Management</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Add and manage multiple electricity meters.</li>
+                        <li>Track electricity usage and costs accurately.</li>
+                        <li>Keep tabs on cooking gas consumption and expenses.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature Card 4: Powerful Reporting -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-chart-line text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">Powerful Reporting & Analytics</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Gain insights with detailed financial summaries.</li>
+                        <li>Generate annual summaries for comprehensive overview.</li>
+                        <li>See overall total costs across all tracked items.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature Card 5: User-Friendly & Secure -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-shield text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">User-Friendly & Secure</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Personalized data ensures privacy.</li>
+                        <li>Flexible access control with admin and demo roles.</li>
+                        <li>Clean, intuitive interface with dark mode option.</li>
+                    </ul>
+                </div>
+
+                <!-- Feature Card 6: Time & Money Saving -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-piggy-bank text-5xl feature-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-center text-gray-700">Save Time & Money</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>Avoid late fees with timely renewal reminders.</li>
+                        <li>Identify cost-saving opportunities through detailed reports.</li>
+                        <li>Reduce stress by keeping all data in one place.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="bg-indigo-600 text-white py-16 md:py-20 text-center shadow-lg">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Take Control?</h2>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+                Join countless others who are simplifying their lives with My Data Tracker. Get started today and experience the peace of mind that comes with organized data.
+            </p>
+            <!-- Replace with your actual login/registration page URL -->
+            <a href="login.php" class="btn-primary inline-block text-lg md:text-xl bg-white text-indigo-700 hover:bg-gray-100 hover:scale-105 transform transition-transform duration-300">
+                Log In Now <i class="fas fa-sign-in-alt ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; <?php echo date('Y'); ?> My Data Tracker. All rights reserved.</p>
+            <p class="text-sm mt-2">Designed with efficiency and simplicity in mind.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

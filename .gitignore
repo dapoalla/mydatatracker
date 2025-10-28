@@ -1,0 +1,28 @@
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# PHP / Logs
+error_log
+.phpunit.result.cache
+
+# Node / Build (if any)
+node_modules/
+dist/
+build/
+
+# Composer
+vendor/
+composer.lock
+
+# Env / Secrets
+.env
+.env.*
+
+# GitHub Actions cache (if added later)
+.cache/
+
+# Archives
+mydatatracker.zip
