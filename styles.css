@@ -1,0 +1,18 @@
+/* Minimal custom styles; Tailwind handles most */
+html,body{font-weight:300}
+.prose{font-weight:300}
+.prose p{font-weight:300; color:#d1d5db}
+.prose h1,.prose h2,.prose h3,.prose h4{font-weight:600}
+.prose strong{font-weight:500}
+.prose img{border-radius:.5rem}
+body, p, .text-neutral-300{font-weight:300}
+
+/* Grey mode theme */
+.grey-mode body{background-color:#18181b !important}
+.grey-mode .bg-neutral-950{background-color:#27272a !important}
+.grey-mode .bg-neutral-900{background-color:#3f3f46 !important}
+.grey-mode .border-neutral-800{border-color:#52525b !important}
+.grey-mode .text-neutral-100{color:#fafafa !important}
+.grey-mode .text-neutral-300{color:#d4d4d8 !important}
+.grey-mode .text-neutral-400{color:#a1a1aa !important}
+.grey-mode .text-neutral-500{color:#71717a !important}

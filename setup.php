@@ -5,10 +5,61 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $message = '';
 $success = false;
 
+function run_preflight_checks(): array {
+    $checks = [];
+    $checks[] = [
+        'label' => 'PHP Version >= 8.1',
+        'status' => PHP_VERSION_ID >= 80100,
+        'detail' => 'Current: ' . PHP_VERSION
+    ];
+    $requiredExt = ['mysqli'];
+    foreach ($requiredExt as $ext) {
+        $checks[] = [
+            'label' => "Extension '$ext' loaded",
+            'status' => extension_loaded($ext),
+            'detail' => extension_loaded($ext) ? 'OK' : 'Enable in php.ini'
+        ];
+    }
+    $dirWritable = is_writable(__DIR__);
+    $checks[] = [
+        'label' => 'App directory is writable',
+        'status' => $dirWritable,
+        'detail' => $dirWritable ? 'OK' : 'Adjust permissions (e.g., 755 dirs, 644 files)'
+    ];
+    // Test creating a temp file (without leaving artifacts if possible)
+    $tmpResult = true;
+    $tmpPath = __DIR__ . '/.perm_test.tmp';
+    try {
+        if ($dirWritable) {
+            $tmpResult = (bool)file_put_contents($tmpPath, 'test');
+            if ($tmpResult) { @unlink($tmpPath); }
+        }
+    } catch (Throwable $e) { $tmpResult = false; }
+    $checks[] = [
+        'label' => 'File write test (config.local.php/install.lock)',
+        'status' => $tmpResult,
+        'detail' => $tmpResult ? 'OK' : 'Unable to write files in this directory'
+    ];
+    $checks[] = [
+        'label' => '.htaccess present (optional on Apache)',
+        'status' => file_exists(__DIR__ . '/.htaccess'),
+        'detail' => file_exists(__DIR__ . '/.htaccess') ? 'Found' : 'Not required on built-in server/XAMPP default'
+    ];
+    return $checks;
+}
+
 function render_form($message = '') {
     $safeMsg = $message ? '<p style="color:' . (str_contains($message, 'error') ? 'red' : 'green') . '">' . htmlspecialchars($message) . '</p>' : '';
-    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Data Tracker - Setup</title><style>body{font-family:system-ui,Segoe UI,Arial;margin:24px;}form{max-width:640px;padding:16px;border:1px solid #ddd;border-radius:8px;background:#fafafa}label{display:block;margin-top:10px}input[type=text],input[type=password]{width:100%;padding:8px;margin-top:4px}button{margin-top:16px;padding:10px 16px}code{background:#eee;padding:2px 4px;border-radius:3px}</style></head><body>';
+    $checks = run_preflight_checks();
+    echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Data Tracker - Setup</title><style>body{font-family:system-ui,Segoe UI,Arial;margin:24px;}form{max-width:640px;padding:16px;border:1px solid #ddd;border-radius:8px;background:#fafafa}label{display:block;margin-top:10px}input[type=text],input[type=password]{width:100%;padding:8px;margin-top:4px}button{margin-top:16px;padding:10px 16px}code{background:#eee;padding:2px 4px;border-radius:3px}.checks{max-width:640px;margin:16px 0;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fefefe}.check{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee}.check:last-child{border-bottom:none}.ok{color:#0a7d2b}.fail{color:#b00020}</style></head><body>';
     echo '<h1>My Data Tracker - Setup</h1>' . $safeMsg;
+    echo '<div class="checks"><h3>Preflight Checks</h3>';
+    foreach ($checks as $c) {
+        $cls = $c['status'] ? 'ok' : 'fail';
+        $icon = $c['status'] ? '✓' : '✗';
+        echo '<div class="check"><div><strong>' . htmlspecialchars($c['label']) . '</strong><br><small>' . htmlspecialchars($c['detail']) . '</small></div><div class="' . $cls . '">' . $icon . '</div></div>';
+    }
+    echo '</div>';
     echo '<p>Provide your MySQL credentials. Optionally wipe existing tables and initialize a fresh schema.</p>';
     echo '<form method="post" action="setup.php">';
     echo '<label>DB Server <input type="text" name="db_server" value="' . htmlspecialchars($_POST['db_server'] ?? 'localhost') . '" required></label>';
@@ -215,6 +266,11 @@ try {
         mysqli_stmt_close($stmt);
     }
 
+    // Before writing files, ensure directory is writable
+    if (!is_writable(__DIR__)) {
+        throw new RuntimeException('Directory is not writable. Adjust permissions to allow writing config.local.php and install.lock.');
+    }
+
     // Write config.local.php with provided credentials
     $configLocal = <<<PHP
 <?php
@@ -223,15 +279,24 @@ define('DB_USERNAME', '{$dbUser}');
 define('DB_PASSWORD', '{$dbPass}');
 define('DB_NAME', '{$dbName}');
 PHP;
-    file_put_contents(__DIR__ . '/config.local.php', $configLocal);
+    if (file_put_contents(__DIR__ . '/config.local.php', $configLocal) === false) {
+        throw new RuntimeException('Failed to write config.local.php. Check file permissions.');
+    }
 
     // Create install lock
-    file_put_contents(__DIR__ . '/install.lock', 'installed ' . date('c'));
+    if (file_put_contents(__DIR__ . '/install.lock', 'installed ' . date('c')) === false) {
+        throw new RuntimeException('Failed to create install.lock. Check file permissions.');
+    }
 
     $success = true;
     $message = 'Setup completed successfully. Redirecting to dashboard...';
 } catch (Throwable $e) {
-    $message = 'Setup error: ' . $e->getMessage();
+    $msg = 'Setup error: ' . $e->getMessage();
+    // Provide hint if MySQL connection fails
+    if ($e instanceof mysqli_sql_exception) {
+        $msg .= ' (Verify server, username, password, and that MySQL is running)';
+    }
+    $message = $msg;
 }
 
 if ($success) {

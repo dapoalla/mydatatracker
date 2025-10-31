@@ -206,7 +206,7 @@ if ($selected_vehicle_id && $current_user_id) {
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="grey-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -215,6 +215,7 @@ if ($selected_vehicle_id && $current_user_id) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -235,6 +236,10 @@ if ($selected_vehicle_id && $current_user_id) {
             <li><a href="review.php">Review & Reports</a></li>
             <li><a href="add_car.php">Manage Vehicles</a></li>
             <li><a href="manage_meters.php">Manage Meters</a></li>
+            <?php if ($is_admin): ?>
+            <li><a href="backup.php">Download Backup</a></li>
+            <li><a href="restore.php">Restore Database</a></li>
+            <?php endif; ?>
             <li>
                 <form action="actions.php" method="POST" style="display:inline;">
                     <input type="hidden" name="action" value="logout">
